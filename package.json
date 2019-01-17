@@ -1,11 +1,15 @@
 {
   "name": "angular-graph",
   "version": "1.0.0",
-  "description": "",
+  "description": "Angular source crawler for generating a diagram.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rlexa/node-angular-diagram"
+  },
   "author": "Alex Rempel",
-  "license": "ISC"
+  "license": "MIT"
 }
