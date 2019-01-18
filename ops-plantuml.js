@@ -8,13 +8,13 @@ function toPuml(components, directives, injectables, modules, { doPackageExterna
   let text = '@startuml';
 
   text += `
-    skinparam class {
-      BackgroundColor Pink
-      BackgroundColor<<injectable>> Aqua
-      BackgroundColor<<component>> PaleGreen
-      BackgroundColor<<directive>> GreenYellow
-      BackgroundColor<<module>> Thistle
-    }`;
+skinparam class {
+  BackgroundColor Pink
+  BackgroundColor<<injectable>> Aqua
+  BackgroundColor<<component>> PaleGreen
+  BackgroundColor<<directive>> GreenYellow
+  BackgroundColor<<module>> Thistle
+}`;
 
   const keysInjectables = Object.keys(injectables);
   const keysComponents = Object.keys(components);

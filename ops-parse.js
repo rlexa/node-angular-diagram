@@ -19,7 +19,17 @@ function findConstructorArgs(text, iClassO) {
             const tokens = line.split(' ').filter(_ => _.length);
             for (let ii = 0; ii < tokens.length - 1; ++ii) {
               if (tokens[ii].endsWith(':')) {
-                deps.push(tokens[ii + 1].replace(/\)/g, '').trim());
+                let depCandidate = tokens[ii + 1].replace(/\)/g, '').trim();
+                let iNested = -1;
+                do {
+                  iNested = depCandidate.indexOf('<');
+                  if (iNested < 0) {
+                    deps.push(depCandidate);
+                  } else {
+                    deps.push(depCandidate.substring(0, iNested));
+                    depCandidate = depCandidate.substring(iNested + 1, depCandidate.length - 1);
+                  }
+                } while (iNested >= 0);
                 break;
               }
             }
