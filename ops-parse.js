@@ -68,7 +68,7 @@ function findClasses(text, decorator, into) {
         const iClassO = text.indexOf(' ', iClassA);
         if (iClassO > iClassA) {
           const clazz = text.substring(iClassA, iClassO);
-          into[clazz] = { deps: findConstructorArgs(text, iClassO), exports: [] };
+          into[clazz] = { deps: new Set(findConstructorArgs(text, iClassO)), exports: [] };
 
           const PREFIX_EXPORTS = 'exports: [';
           let iExportsA = text.indexOf(PREFIX_EXPORTS, iDeco);
@@ -76,7 +76,7 @@ function findClasses(text, decorator, into) {
             iExportsA += PREFIX_EXPORTS.length;
             const iExportsO = text.indexOf(']', iExportsA);
             if (iExportsO > iExportsA) {
-              into[clazz].exports = text.substring(iExportsA, iExportsO).split(',').map(_ => _.trim()).filter(_ => _.length > 1);
+              into[clazz].exports = new Set(text.substring(iExportsA, iExportsO).split(',').map(_ => _.trim()).filter(_ => _.length > 1));
             }
           }
         }
