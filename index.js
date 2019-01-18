@@ -1,6 +1,9 @@
+const child_process = require('child_process');
 const opsFile = require('./ops-file');
 const opsPlantuml = require('./ops-plantuml');
 const opsScan = require('./ops-scan');
+const opsCompress = require('./ops-compression');
+const opsHttp = require('./ops-http');
 
 async function writeResult(path, text) {
   try {
@@ -10,7 +13,7 @@ async function writeResult(path, text) {
   }
 }
 
-async function main(directory, pathOutput) {
+async function main(directory, pathOutput, { tryDownload = false, openSvg = false } = {}) {
   const msStart = Date.now();
   let ms = msStart;
   try {
@@ -38,9 +41,30 @@ async function main(directory, pathOutput) {
 
     const puml = opsPlantuml.toPuml(components, directives, injectables, modules);
 
-    await writeResult(pathOutput, puml);
-    console.log(`.write to ${pathOutput} (${Date.now() - ms}ms)`);
+    const outputPlantuml = pathOutput + '.plantuml';
+    await writeResult(outputPlantuml, puml);
+    console.log(`.write to ${outputPlantuml} (${Date.now() - ms}ms)`);
     ms = Date.now();
+
+    const linkSvgPrefix = 'http://www.plantuml.com/plantuml/svg/';
+    const linkSvg = linkSvgPrefix + opsCompress.compress(puml);
+    console.log('\n');
+    console.log(linkSvg);
+    console.log('\n');
+    if (tryDownload) {
+      const outputSvg = pathOutput + '.svg';
+      console.log(`.requesting ${linkSvgPrefix}...`);
+      await opsHttp.downloadFromTo(linkSvg, outputSvg);
+      console.log(`..write to ${outputSvg} (${Date.now() - ms}ms)`);
+      ms = Date.now();
+    }
+    if (openSvg) {
+      const gotoUrl = (url) => {
+        const start = (process.platform == 'darwin' ? 'open -a "Google Chrome"' : process.platform == 'win32' ? 'start chrome' : 'xdg-open');
+        child_process.exec(start + ' ' + url);
+      }
+      gotoUrl(linkSvg);
+    }
 
     console.log(`done (${Date.now() - msStart}ms)`);
   } catch (ex) {
@@ -50,12 +74,15 @@ async function main(directory, pathOutput) {
 
 const getLinearValueOfKey = (array, key) => Array.isArray(array) && array.includes(key) ? array[array.indexOf(key) + 1] || null : null;
 const getArgvOfKey = (key) => getLinearValueOfKey(process.argv, key);
+const hasArgv = (key) => process.argv.includes(key);
 
-let argvDirectory = getArgvOfKey('--sourcedir');
-let argvOutput = getArgvOfKey('--output') || 'output.plantuml';
+const argvDirectory = getArgvOfKey('--sourcedir');
+const argvOutput = getArgvOfKey('--output') || 'output';
+const argvTryDownload = hasArgv('--download');
+const argvOpenSvg = hasArgv('--open-svg');
 if (!argvDirectory) {
   console.error('Need --sourcedir parameter.');
   process.exit(1);
 } else {
-  main(argvDirectory, argvOutput);
+  main(argvDirectory, argvOutput, { tryDownload: argvTryDownload, openSvg: argvOpenSvg });
 }

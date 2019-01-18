@@ -11,5 +11,9 @@
     "url": "git+https://github.com/rlexa/node-angular-diagram"
   },
   "author": "Alex Rempel",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "child_process": "^1.0.2",
+    "pako": "^1.0.8"
+  }
 }

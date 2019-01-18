@@ -6,6 +6,12 @@ Playground code for simple angular project file crawler.
 
 In VsCode open the `launch.json` and adjust the parameter for your Angular project `/src` folder then hit F5 in `index.js`. The file `output.plantuml` can then be used to generate a diagram e.g. at [plantuml.com](http://www.plantuml.com/plantuml/uml) (keep in mind that the resulting diagram could be too big for PNG so try generating SVG instead).
 
+### Arguments
+- `--sourcedir <DIR>` mandatory, path to `/src` directory of Angular project
+- `--output <FILENAME>` standard 'output', used for generating files i.e. `output.plantuml`
+- `--download` if present will try to download SVG diagram
+- `--open-svg` if present will try to open SVG diagram in Chrome without downloading
+
 ## Issues & TODOs
 
 The parsing code is very simple and doesn't account for:
