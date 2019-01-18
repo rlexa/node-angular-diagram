@@ -41,9 +41,23 @@ function findConstructorArgs(text, iClassO) {
   return deps;
 }
 
+function decomment(text) {
+  let iCur = -1;
+  while ((iCur = text.indexOf('/*')) >= 0) {
+    const iEnd = text.indexOf('*/', iCur);
+    text = text.substring(0, iCur) + (iEnd < 0 ? '' : text.substring(iEnd + '*/'.length));
+  }
+  while ((iCur = text.indexOf('//')) >= 0) {
+    const iEnd = text.indexOf('\n', iCur);
+    text = text.substring(0, iCur) + (iEnd < 0 ? '' : text.substring(iEnd + '\n'.length));
+  }
+  return text;
+}
+
 function findClasses(text, decorator, into) {
   let iDeco = -1;
   do {
+    text = decomment(text);
     iDeco = text.indexOf(decorator, iDeco);
     if (iDeco >= 0) {
       iDeco += decorator.length;
