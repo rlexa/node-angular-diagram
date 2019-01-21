@@ -4,7 +4,7 @@
     "npm publish": "publish to npm"
   },
   "name": "dd-angular-graph",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Angular source crawler for generating a plantuml diagram.",
   "main": "index.js",
   "bin": {

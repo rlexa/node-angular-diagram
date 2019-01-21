@@ -2,11 +2,18 @@
 
 Playground code for simple angular project file crawler.
 
-## HowTo
+## Execute
 
-Just execute `"node <pathToThisDir>"` in Angular project dir.
+- install
+  - `npm i --save-dev dd-angular-graph`
+- add script to `package.json` e.g.:
+  - `"show_graph": "dd-angular-graph --open-svg"`
+- execute in terminal
+  - `npm run show_graph`
 
-For debugging: in VsCode open the `launch.json` and adjust the parameter for your Angular project `/src` folder then hit F5 in `index.js`. The file `output.plantuml` can then be used to generate a diagram e.g. at [plantuml.com](http://www.plantuml.com/plantuml/uml) (keep in mind that the resulting diagram could be too big for PNG so try generating SVG instead).
+### Debugging
+
+Clone repository and in VsCode open the `launch.json` and add the `--sourcedir <DIR>` argument for your Angular project `/src` folder then hit F5 in `index.js`. The file `output.plantuml` can then be used to generate a diagram e.g. at [plantuml.com](http://www.plantuml.com/plantuml/uml) (keep in mind that the resulting diagram could be too big for PNG so try generating SVG instead).
 
 ### Arguments
 - `--sourcedir <DIR>` optional if `angular.json` is in working dir else mandatory path to `/src` dir
