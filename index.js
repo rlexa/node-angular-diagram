@@ -1,5 +1,7 @@
 'use strict';
 
+const path = require('path');
+
 const child_process = require('child_process');
 const opsFile = require('./ops-file');
 const opsPlantuml = require('./ops-plantuml');
@@ -43,7 +45,7 @@ async function main(directory, pathOutput, { tryDownload = false, openSvg = fals
 
     const puml = opsPlantuml.toPuml(components, directives, injectables, modules);
 
-    const outputPlantuml = pathOutput + '.plantuml';
+    const outputPlantuml = path.join(process.cwd(), pathOutput + '.plantuml');
     await writeResult(outputPlantuml, puml);
     console.log(`.write to ${outputPlantuml} (${Date.now() - ms}ms)`);
     ms = Date.now();
@@ -54,7 +56,7 @@ async function main(directory, pathOutput, { tryDownload = false, openSvg = fals
     console.log(linkSvg);
     console.log('\n');
     if (tryDownload) {
-      const outputSvg = pathOutput + '.svg';
+      const outputSvg = path.join(process.cwd(), pathOutput + '.svg');
       console.log(`.requesting ${linkSvgPrefix}...`);
       await opsHttp.downloadFromTo(linkSvg, outputSvg);
       console.log(`..write to ${outputSvg} (${Date.now() - ms}ms)`);
@@ -78,13 +80,42 @@ const getLinearValueOfKey = (array, key) => Array.isArray(array) && array.includ
 const getArgvOfKey = (key) => getLinearValueOfKey(process.argv, key);
 const hasArgv = (key) => process.argv.includes(key);
 
-const argvDirectory = getArgvOfKey('--sourcedir');
-const argvOutput = getArgvOfKey('--output') || 'output';
-const argvTryDownload = hasArgv('--download');
-const argvOpenSvg = hasArgv('--open-svg');
-if (!argvDirectory) {
-  console.error('Need --sourcedir parameter.');
-  process.exit(1);
-} else {
-  main(argvDirectory, argvOutput, { tryDownload: argvTryDownload, openSvg: argvOpenSvg });
+async function prepareMain() {
+  console.log(`
+--sourcedir <DIR> optional if angular.json in working dir else mandatory path to /src/
+--output          optional export filename (default 'output')
+--download        flag for trying to download the diagram as SVG file
+--open-svg        flag for trying to open SVG diagram link in Chrome
+`);
+
+  let argvOutput = getArgvOfKey('--output') || 'output';
+  const argvTryDownload = hasArgv('--download');
+  const argvOpenSvg = hasArgv('--open-svg');
+
+  let argvDirectory = getArgvOfKey('--sourcedir');
+  if (argvDirectory) {
+    if (!path.isAbsolute(argvDirectory)) {
+      argvDirectory = path.join(process.cwd(), argvDirectory);
+    }
+  } else {
+    try {
+      const cfg = JSON.parse(await opsFile.fsRead(path.join(process.cwd(), 'angular.json')));
+      if (cfg && cfg['defaultProject']) {
+        const cfgDefaultProject = cfg['defaultProject'];
+        if (cfg['projects'] && cfg['projects'][cfgDefaultProject]) {
+          const cfgProject = cfg['projects'][cfgDefaultProject];
+          argvDirectory = path.join(process.cwd(), cfgProject['root'] || '', cfgProject['sourceRoot'] || '');
+        }
+      }
+    } catch (ex) { }
+  }
+
+  if (!argvDirectory) {
+    console.error('Need --sourcedir parameter or angular.json in working directory');
+    process.exit(1);
+  } else {
+    main(argvDirectory, argvOutput, { tryDownload: argvTryDownload, openSvg: argvOpenSvg });
+  }
 }
+
+prepareMain();

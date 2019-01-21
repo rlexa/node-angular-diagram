@@ -9,11 +9,7 @@
       "request": "launch",
       "name": "Launch Program",
       "program": "${workspaceFolder}\\index.js",
-      "args": [
-        "--sourcedir",
-        "D:/Development/VERSIONED-DEV/src",
-        "--open-svg"
-      ]
+      "args": []
     }
   ]
 }
