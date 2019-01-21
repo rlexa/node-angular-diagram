@@ -1,3 +1,5 @@
+'use strict';
+
 function toPuml(components, directives, injectables, modules, { doPackageExternals = false, doPackageModules = false } = {}) {
   let randomSeed = 1;
   function random() {

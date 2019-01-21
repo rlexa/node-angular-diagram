@@ -1,3 +1,5 @@
+'use strict';
+
 function findConstructorArgs(text, iClassO) {
   const deps = [];
   let iClassOpen = text.indexOf('{', iClassO);

@@ -1,3 +1,5 @@
+'use strict';
+
 const child_process = require('child_process');
 const opsFile = require('./ops-file');
 const opsPlantuml = require('./ops-plantuml');

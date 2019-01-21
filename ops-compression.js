@@ -1,3 +1,5 @@
+'use strict';
+
 const pako = require('pako');
 
 const deflate = text => pako.deflate(text, { to: 'string' });

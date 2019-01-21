@@ -1,3 +1,5 @@
+'use strict';
+
 const fs = require('fs');
 
 const fsRead = path => new Promise((ack, nak) => fs.readFile(path, 'utf8', (err, data) => err ? nak(err) : ack(data)));
