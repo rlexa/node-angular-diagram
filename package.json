@@ -1,10 +1,16 @@
 {
+  "_help": {
+    "npm login": "before publishing",
+    "npm publish": "publish to npm"
+  },
   "name": "dd-angular-graph",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Angular source crawler for generating a plantuml diagram.",
   "main": "index.js",
-  "scripts": {
+  "bin": {
+    "dd-angular-graph": "./index.js"
   },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rlexa/node-angular-diagram"
