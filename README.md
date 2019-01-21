@@ -1,6 +1,6 @@
-# node-angular-diagram
+# dd-angular-graph
 
-Playground code for simple angular project file crawler.
+Very simple angular project file crawler.
 
 ## Execute
 
